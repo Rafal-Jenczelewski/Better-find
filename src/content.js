@@ -1855,7 +1855,11 @@ function MarkJS(ctx) {
 }
 
 let mark = new MarkJS(document);
-
+let savedMsg = {
+    input: "",
+    caseSensitive: false,
+    wildcards: false
+};
 
 chrome.runtime.onConnect.addListener(port => {
     console.log('on connect');
@@ -1863,13 +1867,21 @@ chrome.runtime.onConnect.addListener(port => {
         console.log('connecting to better-find')
 
         port.onMessage.addListener(msg => {
-            console.log('msg:');
-            console.log(msg)
-            mark.unmark();
-            mark.mark(msg.input, {
-                caseSensitive: msg.case,
-                wildcards: msg.wildcards ? "enabled" : "disabled"
-            })
+            if (msg.input === "$retrive$") {
+                console.log('Got retrive request');
+                port.postMessage(savedMsg)
+            } else {
+                console.log('msg:');
+                console.log(msg);
+
+                Object.assign(savedMsg, msg);
+
+                mark.unmark();
+                mark.mark(savedMsg.input, {
+                    caseSensitive: savedMsg.caseSensitive,
+                    wildcards: savedMsg.wildcards ? "enabled" : "disabled"
+                })
+            }
         })
     }
 })

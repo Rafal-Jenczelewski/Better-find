@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
+  "name": "Better-find",
   "description": "This extensions uses mark.js to enhance quick find.",
   "version": "1.0",
   "content_security_policy": "default-src 'self'; script-src 'self' https://unpkg.com/@reactivex/rxjs@5.5.6/dist/global/Rx.js",

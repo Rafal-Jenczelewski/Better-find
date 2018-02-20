@@ -21,7 +21,7 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["content.js"],
+      "js": ["content.js", "/Mark/Mark.js", "/Mark/MarkJS.js", "Mark/Domiterator.js"],
       "run_at": "document_end"
     }
   ]

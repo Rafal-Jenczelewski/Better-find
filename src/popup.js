@@ -39,10 +39,8 @@ chrome.tabs.getSelected(tab => {
                 caseInput.checked = msg.caseSensitive;
                 wildcardsInput.checked = msg.wildcards;
                 break;
-            case '$done$':
-                document.getElementById("markedCount").innerHTML = msg.elementsMarked;
         }
-
+        updateElementsCount(msg.elementsMarked);
     });
 });
 
@@ -64,3 +62,7 @@ chrome.commands.onCommand.addListener(command => {
             break;
     }
 });
+
+function updateElementsCount(count) {
+    document.getElementById("markedCount").innerHTML = count;
+}

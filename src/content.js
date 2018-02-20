@@ -3,7 +3,8 @@ let retriveMsgString = "$retrive$";
 let savedMsg = {
     input: "",
     caseSensitive: false,
-    wildcards: false
+    wildcards: false,
+    elementsMarked: 0
 };
 
 chrome.runtime.onConnect.addListener(port => {
@@ -27,6 +28,7 @@ chrome.runtime.onConnect.addListener(port => {
                     caseSensitive: savedMsg.caseSensitive,
                     wildcards: savedMsg.wildcards ? "enabled" : "disabled",
                     done(count) {
+                        savedMsg.elementsMarked = count;
                         port.postMessage({type: '$done$', elementsMarked: count})
                     }
                 })

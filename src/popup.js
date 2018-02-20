@@ -1,15 +1,17 @@
+let retriveMsgString = '$retrive$';
+
 chrome.tabs.getSelected(tab => {
     let port = chrome.tabs.connect(tab.id, {name: 'better-find'});
-
-    port.postMessage({input: "$retrive$"});
 
     let keywordInput = document.getElementById('keywordInput');
     let caseInput = document.getElementById('caseInput');
     let wildcardsInput = document.getElementById('wildcardsInput');
 
+    port.postMessage({input: retriveMsgString});
+
     let keywordChangeEvent = Rx.Observable.fromEvent(keywordInput, 'keyup')
         .debounce(() => Rx.Observable.timer(500))
-        .map(e => e.target.value)
+        .map(e => e.target.value);
     let caseChangeEvent = Rx.Observable.fromEvent(caseInput, 'change')
         .debounce(() => Rx.Observable.timer(500))
         .map(e => e.target.checked)
@@ -24,15 +26,41 @@ chrome.tabs.getSelected(tab => {
             input: kw,
             caseSensitive: c,
             wildcards: w
-        }
+        };
     });
 
-    stream.subscribe(e => port.postMessage(e))
+    stream.subscribe(e => port.postMessage(e));
 
     port.onMessage.addListener(msg => {
-        console.log(msg)
-        keywordInput.value = msg.input;
-        caseInput.checked = msg.caseSensitive;
-        wildcardsInput.checked = msg.wildcards;
-    })
-})
+        console.log(msg);
+        switch (msg.type) {
+            case retriveMsgString:
+                keywordInput.value = msg.input;
+                caseInput.checked = msg.caseSensitive;
+                wildcardsInput.checked = msg.wildcards;
+                break;
+            case '$done$':
+                document.getElementById("markedCount").innerHTML = msg.elementsMarked;
+        }
+
+    });
+});
+
+chrome.commands.onCommand.addListener(command => {
+    let caseInput = document.getElementById('caseInput');
+    let wildcardsInput = document.getElementById('wildcardsInput');
+
+    let event = new Event('change');
+
+    //TODO: change to checked prop should be in event itself!
+    switch (command) {
+        case 'toggle-case-sensitive':
+            caseInput.dispatchEvent(event);
+            caseInput.checked = !caseInput.checked;
+            break;
+        case 'toggle-wildcards':
+            wildcardsInput.dispatchEvent(event);
+            wildcardsInput.checked = !wildcardsInput.checked;
+            break;
+    }
+});

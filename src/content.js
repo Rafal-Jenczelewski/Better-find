@@ -1,3 +1,5 @@
+let retriveMsgString = "$retrive$";
+
 let savedMsg = {
     input: "",
     caseSensitive: false,
@@ -11,9 +13,9 @@ chrome.runtime.onConnect.addListener(port => {
         console.log('connecting to better-find')
 
         port.onMessage.addListener(msg => {
-            if (msg.input === "$retrive$") {
+            if (msg.input === retriveMsgString) {
                 console.log('Got retrive request');
-                port.postMessage(savedMsg)
+                port.postMessage({type: retriveMsgString, ...savedMsg})
             } else {
                 console.log('msg:');
                 console.log(msg);
@@ -23,7 +25,10 @@ chrome.runtime.onConnect.addListener(port => {
                 mark.unmark();
                 mark.mark(savedMsg.input, {
                     caseSensitive: savedMsg.caseSensitive,
-                    wildcards: savedMsg.wildcards ? "enabled" : "disabled"
+                    wildcards: savedMsg.wildcards ? "enabled" : "disabled",
+                    done(count) {
+                        port.postMessage({type: '$done$', elementsMarked: count})
+                    }
                 })
             }
         })

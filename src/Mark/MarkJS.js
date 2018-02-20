@@ -18,5 +18,3 @@ function MarkJS(ctx) {
     };
     return this;
 }
-
-console.log('after MarkJs');

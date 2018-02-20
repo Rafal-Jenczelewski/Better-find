@@ -5,7 +5,20 @@
   "description": "This extensions uses mark.js to enhance quick find.",
   "version": "1.0",
   "content_security_policy": "default-src 'self'; script-src 'self' https://unpkg.com/@reactivex/rxjs@5.5.6/dist/global/Rx.js",
-
+  "commands": {
+    "toggle-case-sensitive": {
+      "suggested_key": {
+        "default": "Ctrl+C"
+      },
+      "description": "Toggle case sensitive search"
+    },
+    "toggle-wildcards": {
+      "suggested_key": {
+        "default": "Ctrl+W"
+      },
+      "description": "Toggle wildcards in search"
+    }
+  },
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
